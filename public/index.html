@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simson Debate Prep Lessons</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: classroom projector. Sticky day bar, step rail on the left (pills on phones), one large stage per step. */
+:root{
+  --paper:#f3f5f8; --surface:#ffffff; --ink:#18223a; --muted:#5b6478; --line:#d9dee8;
+  --bell:#d98a12; --bell-soft:#fbf0dc;
+  --gov:#1f5fbf; --gov-soft:#e3ecfa; --opp:#c0392b; --opp-soft:#fae6e3;
+  --ok:#1e8a5a; --ok-soft:#e1f3ea; --no:#b3261e; --no-soft:#fbe4e2;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#11151f; --surface:#1a2030; --ink:#e8ecf4; --muted:#9aa3b8; --line:#2c3447;
+  --bell:#f0a933; --bell-soft:#3a2d14; --gov:#6aa2f2; --gov-soft:#1a2a45; --opp:#f07a6c; --opp-soft:#43211d;
+  --ok:#4cc58c; --ok-soft:#173527; --no:#f2867c; --no-soft:#42201d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#11151f; --surface:#1a2030; --ink:#e8ecf4; --muted:#9aa3b8; --line:#2c3447;
+  --bell:#f0a933; --bell-soft:#3a2d14; --gov:#6aa2f2; --gov-soft:#1a2a45; --opp:#f07a6c; --opp-soft:#43211d;
+  --ok:#4cc58c; --ok-soft:#173527; --no:#f2867c; --no-soft:#42201d; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--bell);outline-offset:2px}
+
+/* Day bar */
+.daybar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.daybar-inner{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:800;font-size:18px;margin-right:6px;white-space:nowrap}
+.days{display:flex;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
+.day-tab{border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:5px 10px;font-size:15px;cursor:pointer;text-align:left;line-height:1.2}
+.day-tab small{display:block;color:var(--muted);font-size:12px}
+.day-tab[aria-current="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.day-tab[aria-current="true"] small{color:inherit;opacity:.75}
+.toggle{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.toggle input{width:18px;height:18px;accent-color:var(--bell)}
+
+/* Main grid */
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:28px;padding-block:24px 48px;max-width:1280px;margin:0 auto}
+.rail{position:sticky;top:90px;align-self:start;display:flex;flex-direction:column;gap:4px}
+.rail .goal{font-size:14px;color:var(--muted);margin-bottom:10px}
+.rail .daytitle{font-family:var(--display);font-weight:800;font-size:22px;margin-bottom:4px}
+.step-link{display:grid;grid-template-columns:62px 1fr;gap:8px;align-items:baseline;border:0;background:none;text-align:left;padding:8px 10px;border-radius:10px;cursor:pointer;color:var(--muted)}
+.step-link .mins{font-family:var(--mono);font-size:13px}
+.step-link[aria-current="true"]{background:var(--surface);color:var(--ink);box-shadow:inset 3px 0 0 var(--bell)}
+.step-link:hover{color:var(--ink)}
+
+.stage{min-width:0;display:flex;flex-direction:column;gap:20px}
+.stage-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--bell);font-weight:700}
+.stage h2{font-size:clamp(28px,4vw,44px);font-weight:800;margin-top:4px}
+.lead{font-size:20px;max-width:62ch;color:var(--ink)}
+
+/* Step timer */
+.timer{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:8px 10px 8px 14px}
+.timer .clock{font-family:var(--mono);font-weight:700;font-size:28px;font-variant-numeric:tabular-nums;min-width:4.2ch;text-align:right}
+.timer.done .clock{color:var(--bell)}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:700}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn.small{padding:5px 10px;font-size:15px}
+
+.nav{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:16px;margin-top:8px}
+
+/* Content blocks */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.panel h3{font-size:22px;margin-bottom:8px}
+ul.clean{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px}
+.tag{display:inline-block;font-family:var(--mono);font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;letter-spacing:.04em}
+.tag.gov{background:var(--gov-soft);color:var(--gov)}
+.tag.opp{background:var(--opp-soft);color:var(--opp)}
+.tag.bell{background:var(--bell-soft);color:var(--bell)}
+.say{font-family:var(--display);font-weight:600;font-size:20px}
+.muted{color:var(--muted)}
+.big{font-size:22px}
+
+.teacher{display:none;border:1px dashed var(--bell);background:var(--bell-soft);border-radius:14px;padding:14px 16px;font-size:16px}
+.teacher b{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--bell);display:block;margin-bottom:4px}
+body.show-notes .teacher{display:block}
+
+/* Rounds */
+.rounds{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.round{border-radius:14px;padding:16px;border:1px solid var(--line);background:var(--surface)}
+.round .rn{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.round h3{font-size:20px;margin:2px 0 8px}
+.round.final{border-color:var(--bell);background:var(--bell-soft)}
+
+/* Speaking order */
+.order{display:flex;align-items:stretch;gap:6px;flex-wrap:wrap}
+.spk{flex:1 1 120px;border-radius:14px;padding:12px;cursor:pointer;border:2px solid transparent;text-align:left;display:flex;flex-direction:column;gap:2px}
+.spk.gov{background:var(--gov-soft)} .spk.opp{background:var(--opp-soft)}
+.spk .ab{font-family:var(--display);font-weight:800;font-size:26px}
+.spk.gov .ab{color:var(--gov)} .spk.opp .ab{color:var(--opp)}
+.spk .nm{font-size:14px;color:var(--muted)}
+.spk[aria-pressed="true"]{border-color:var(--ink)}
+.spk .now{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--bell);visibility:hidden}
+.spk.current .now{visibility:visible}
+.prepchip{align-self:center;font-family:var(--mono);font-size:11px;color:var(--muted);writing-mode:horizontal-tb}
+.spkdetail{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.bar{display:flex;border-radius:10px;overflow:hidden;height:46px;border:1px solid var(--line)}
+.bar span{display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1.1;text-align:center;padding:0 4px;border-right:1px solid var(--surface);overflow:hidden}
+.bar.gov span:nth-child(odd){background:var(--gov-soft)} .bar.gov span:nth-child(even){background:var(--surface)}
+.bar.opp span:nth-child(odd){background:var(--opp-soft)} .bar.opp span:nth-child(even){background:var(--surface)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;color:var(--muted)}
+.legend b{font-family:var(--mono);color:var(--ink);font-weight:500}
+
+/* CMI */
+.cmi{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.cmi .panel{position:relative}
+.cmi .k{font-family:var(--display);font-weight:800;font-size:26px}
+.cmi .arel{font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+/* Ladder */
+.ladder{display:flex;flex-direction:column-reverse;gap:8px}
+.rung{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;align-items:start;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer;text-align:left}
+.rung .n{font-family:var(--display);font-weight:800;font-size:26px;color:var(--muted)}
+.rung.aim{border-color:var(--bell)}
+.rung.aim .n{color:var(--bell)}
+.rung .ex{display:none;color:var(--muted);margin-top:4px}
+.rung[aria-expanded="true"] .ex{display:block}
+
+/* Speech timeline */
+.tl{position:relative;padding-top:34px}
+.tl-track{display:flex;height:54px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.tl-track div{display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;text-align:center;padding:0 4px}
+.z-prot{background:var(--paper);color:var(--muted)}
+.z-poi{background:var(--ok-soft);color:var(--ok)}
+.z-grace{background:var(--bell-soft);color:var(--bell)}
+.z-dead{background:var(--no-soft);color:var(--no)}
+.tl-marks{position:absolute;inset:0 0 auto;height:30px}
+.tl-marks span{position:absolute;transform:translateX(-50%);font-family:var(--mono);font-size:12px;white-space:nowrap;color:var(--muted)}
+.tl-marks span.bellm{color:var(--bell);font-weight:700}
+.tl-head{position:absolute;top:28px;bottom:-6px;width:3px;background:var(--ink);border-radius:2px;transform:translateX(-50%);pointer-events:none}
+#tl input[type=range]{width:100%;margin-top:14px;accent-color:var(--ink)}
+.tl-status{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.tl-status .clock{font-family:var(--mono);font-weight:700;font-size:34px;font-variant-numeric:tabular-nums}
+.tl-status .msg{font-size:20px;font-weight:700}
+
+/* Reveal cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:10px;text-align:left;cursor:pointer}
+.card .q{font-size:18px}
+.card .a{display:none;padding:10px 12px;border-radius:10px;font-size:16px}
+.card .a.yes{background:var(--ok-soft)} .card .a.no{background:var(--no-soft)}
+.card .a strong{font-family:var(--display);font-size:20px}
+.card[aria-expanded="true"] .a{display:block}
+.card .hint{font-size:13px;color:var(--muted)}
+.card[aria-expanded="true"] .hint{display:none}
+
+/* Drill */
+.drill{display:flex;flex-direction:column;gap:14px}
+.drill .arg{font-family:var(--display);font-weight:600;font-size:clamp(22px,2.6vw,30px);line-height:1.3}
+.frame{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.frame div{border-left:4px solid var(--bell);background:var(--paper);padding:10px 12px;border-radius:0 10px 10px 0;font-family:var(--display);font-weight:600}
+
+/* Motion draw */
+.draw{display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.draw .motion{font-family:var(--display);font-weight:800;font-size:clamp(24px,3.2vw,38px);line-height:1.2;min-height:2.4em}
+.draw .motion.spin{opacity:.45}
+
+/* Phases */
+.phases{display:flex;flex-direction:column;gap:8px}
+.phase{display:grid;grid-template-columns:90px minmax(0,1fr);gap:12px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface)}
+.phase .pt{font-family:var(--mono);font-weight:700}
+.phase.active{border-color:var(--bell);background:var(--bell-soft)}
+.phase.past{opacity:.55}
+
+/* Scores */
+.scores{display:flex;flex-direction:column;gap:10px}
+.score-row{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;align-items:center}
+.score-row .sb{height:36px;border-radius:8px;background:var(--ink);color:var(--paper);display:flex;align-items:center;padding:0 12px;font-family:var(--mono);font-weight:700;font-size:15px}
+
+table{border-collapse:collapse;width:100%;font-size:16px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:700}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tablewrap{overflow-x:auto}
+
+.checklist{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.checklist label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.checklist input{width:20px;height:20px;margin-top:3px;accent-color:var(--ok);flex:none}
+
+a{color:var(--gov)}
+.mats{display:flex;flex-direction:column;gap:10px}
+.mat{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 16px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.mat h3{font-size:19px;margin:0}
+.mat p{margin:2px 0 0;color:var(--muted);font-size:15px}
+.mat .meta{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.mat a.btn{text-decoration:none;color:var(--ink);white-space:nowrap}
+.today{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.today a{text-decoration:none;color:var(--ink);font-size:15px}
+.today .lbl{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.day-tab.mats-tab{border-style:dashed}
+@media (max-width:560px){.mat{grid-template-columns:minmax(0,1fr)}}
+
+@media (max-width: 860px){
+  .layout{grid-template-columns:minmax(0,1fr);gap:16px;padding-block:16px 40px}
+  .rail{position:static;flex-direction:row;flex-wrap:wrap;gap:6px}
+  .rail .goal,.rail .daytitle{width:100%}
+  .step-link{grid-template-columns:auto;padding:6px 10px;border:1px solid var(--line)}
+  .step-link .mins{display:none}
+  .step-link[aria-current="true"]{box-shadow:none;border-color:var(--bell)}
+  .brand{display:none}
+  .days{flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}
+  .day-tab{flex:none}
+  body{font-size:17px}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+</head>
+<body>
+<header class="daybar">
+  <div class="wrap daybar-inner">
+    <div class="brand">Simson Debate Prep</div>
+    <nav class="days" id="days" aria-label="Class days"></nav>
+    <label class="toggle"><input type="checkbox" id="notesToggle"> Teacher notes</label>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="layout">
+    <aside class="rail" id="rail" aria-label="Steps"></aside>
+    <main class="stage" id="stage" aria-live="polite"></main>
+  </div>
+</div>
+
+<script>
+/* ---------- Data ---------- */
+const SPEAKERS = [
+  {id:'PM', name:'Prime Minister', side:'gov', poi:true,
+   job:'Defines the motion and gives the first 2 arguments. Announces 3 arguments; the DPM gives the third. No rebuttal expected.',
+   say:'"Today’s motion is… By ___, we mean… Our plan is simple:…"',
+   parts:[['Motion & definition',25],['The problem',15],['Signposting',10],['Argument 1',55],['Argument 2',55],['Call to action',20]]},
+  {id:'LO', name:'Leader of Opposition', side:'opp', poi:true,
+   job:'Reframes the debate, rebuts the PM’s strongest point, then gives 2 arguments.',
+   say:'"The Prime Minister wants you to believe… We reject this. The real debate is about…"',
+   parts:[['Clash of visions',30],['Rebut the PM',35],['Signposting',10],['Argument 1',45],['Argument 2',40],['Promise',20]]},
+  {id:'DPM', name:'Deputy Prime Minister', side:'gov', poi:true,
+   job:'Rebuts the LO’s two arguments, rebuilds the PM’s case, and adds the third argument.',
+   say:'"They want you to believe this debate is about… But the real debate is about…"',
+   parts:[['Framing',20],['Rebuttal',50],['Rebuild',35],['New argument',55],['Summary',20]]},
+  {id:'DLO', name:'Deputy Leader of Opposition', side:'opp', poi:true,
+   job:'Rebuts the Government case (including the DPM), rebuilds the LO’s case, and adds the third argument.',
+   say:'"They attacked our Leader’s point on ___ by saying ___. But that fails because ___."',
+   parts:[['Framing',20],['Rebuttal',50],['Rebuild',35],['New argument',55],['Summary',20]]},
+  {id:'GW', name:'Government Whip', side:'gov', poi:false,
+   job:'Answers the last speaker, then explains why Government won the 2 biggest clashes. No new arguments. Receives no POIs.',
+   say:'"Now, there are two clashes today. The first clash was… So we win this clash."',
+   parts:[['Rebut last speaker',30],['Clash 1',55],['Clash 2',55],['Weighing',20],['Final ballot',20]]},
+  {id:'OW', name:'Opposition Whip', side:'opp', poi:false,
+   job:'Answers the last speaker, then explains why Opposition won the 2 biggest clashes. No new arguments. Receives no POIs.',
+   say:'"Because we won on ___ and on ___, the ballot belongs to our side. Thank you."',
+   parts:[['Rebut last speaker',30],['Clash 1',55],['Clash 2',55],['Weighing',20],['Final ballot',20]]}
+];
+
+const MOTIONS = [
+  {id:'rent', month:'Jan', short:'Rent freezes', motion:'THBT rent freezes are a form of harmful populism.',
+   words:'rent freeze · populism · landlord · tenant',
+   clashes:['Do rent freezes hurt or help the housing market?','Who is protected, and who is left out?'],
+   args:[{side:'gov',t:'Rent freezes make landlords stop renting or repairing homes, so there are fewer homes and rent jumps later. Look at Berlin in 2019.'},
+         {side:'opp',t:'Rent freezes protect vulnerable people when rent rises faster than their income. Vienna’s strong rent rules keep homes affordable.'}]},
+  {id:'atlas', month:'Mar', short:'Humanoid robots (Atlas)', motion:'THBT humanoid robots like Atlas must be restricted from fully replacing humans in automobile factories.',
+   words:'humanoid · be restricted · automation · unemployment · productivity',
+   clashes:['Does fast automation break society or move it forward?','Which matters more for growth: efficiency or customers who can buy?'],
+   args:[{side:'gov',t:'If robots replace workers too fast, thousands lose their jobs at once and whole towns decline, like after Amazon automated its warehouses.'},
+         {side:'opp',t:'Robots take dangerous jobs and create new industries. We should retrain workers, not stop technology, as BMW and Tesla show.'}]},
+  {id:'profits', month:'Jul', short:'Excess profits', motion:'THBT companies’ excess profits should be distributed to workers before shareholders.',
+   words:'excess profits · distribute · shareholder · bonus · investment',
+   clashes:['Who deserves the reward: workers or shareholders?','Does sharing profits grow or shrink the company in the long run?'],
+   args:[{side:'gov',t:'Workers create the profits every day, so they deserve a share first. Samsung’s 2026 bonus deal recognised this.'},
+         {side:'opp',t:'If shareholders get less, investors leave and the company can’t pay for its future, like Samsung’s chip factories.'}]},
+  {id:'public', month:'Aug', short:'Going public', motion:'THBT companies should become public companies when they want to grow.',
+   words:'public company · private company · share · IPO · investor',
+   clashes:['Is going public the best way to get money for growth?','Does stock market pressure make decisions better or worse?'],
+   args:[{side:'gov',t:'Going public raises huge amounts of money that don’t have to be paid back like a loan. Amazon grew this way after 1997.'},
+         {side:'opp',t:'Private companies can make bold, long-term bets without stock market pressure every three months, like SpaceX did.'}]},
+  {id:'equality', month:'Sep', short:'Equality vs. equity', motion:'THBT treating everyone the same cannot achieve true equality.',
+   words:'equality · equity · treat · achieve · reverse discrimination',
+   clashes:['Do the same rules hide unequal starting points?','Is different treatment fair, or a new kind of unfairness?'],
+   args:[{side:'gov',t:'The same rules keep old advantages: Seoul students were about 2.6 times more likely to get into SNU, mostly because of family money and tutoring.'},
+         {side:'opp',t:'Equity can judge people by their group instead of their effort. That is reverse discrimination, as the US Supreme Court ruled in 2023.'}]}
+];
+
+const UNSEEN = [
+  'THBT schools should ban smartphones during the school day.',
+  'THBT AI tutors will do more good than harm for students.',
+  'THBT cities should make public transport free.',
+  'THBT companies should be allowed to choose a four-day work week.'
+];
+
+const POI_CARDS = [
+  {q:'It’s 0:45 into the PM’s speech. Can you offer a POI?', ok:false, a:'No. The first minute is protected time. Wait for the single bell at 1:00.'},
+  {q:'It’s 1:40 into the LO’s speech. You stand up. Nobody has offered a POI yet. Must the LO accept?', ok:true, a:'Yes. The first POI offered to a speaker cannot be declined.'},
+  {q:'The DPM already took one POI. You offer a second at 2:00. Must he accept?', ok:false, a:'No. Second and later POIs can be declined. He can say "No thank you" and keep going.'},
+  {q:'It’s 2:40 into the DLO’s speech. Can you offer a POI?', ok:false, a:'No. POIs close at 2:30, when the judge rings two bells.'},
+  {q:'The Opposition Whip is speaking at 1:30. Can you offer a POI?', ok:false, a:'No. Whip speakers never receive POIs.'},
+  {q:'Your POI question takes 25 seconds. Is that OK?', ok:false, a:'No. A POI must be under 15 seconds. Ask one short question.'},
+  {q:'Does the speaker’s clock stop while you ask your POI?', ok:false, a:'No. The clock keeps running, so the speaker should answer in one sentence and go back to their point.'}
+];
+
+const LADDER = [
+  {n:1, name:'Wrong facts', say:'"That fact is wrong because…"', ex:'Weakest. Their idea still stands, so don’t stop here.'},
+  {n:2, name:'Too small or too slow', say:'"This only affects a few people, takes too long, or would happen anyway."', ex:'Shrinks their point, but doesn’t destroy it.'},
+  {n:3, name:'Chain breaks', say:'"Their step A does not lead to step B, because people would really…"', ex:'Shows their logic has a gap in the middle.'},
+  {n:4, name:'Root idea', say:'"Their whole argument assumes ___, and that is false because…"', ex:'Aim here. If the root falls, everything on top falls too.', aim:true},
+  {n:5, name:'Even if', say:'"Even if everything they said works, we still win because…"', ex:'Aim here. The safest answer: it works even if the judge believes them.', aim:true}
+];
+
+const WEIGH = [
+  ['Two worlds','"If we change only this one thing, the world looks like ___. Without it, ___."'],
+  ['Even if','"Even if they are right that ___, we still win because ___."'],
+  ['Bigger','"Ours affects more people: ___ compared to ___."'],
+  ['Hard to undo','"Their harm can be fixed later, but ours cannot be undone."'],
+  ['New change','"Our benefit only happens because of our side. Theirs would happen anyway."'],
+  ['Most vulnerable','"The people who need protection most are ___, and only our side protects them."'],
+  ['Rights first','"A basic right like ___ must come before money or convenience."'],
+  ['Comes first','"Their point cannot happen without ours, so ours comes first."'],
+  ['Tipping point','"It is already close to breaking, and their side pushes it over."']
+];
+
+const MATS = {
+  lessons:{file:'lesson-plans.pdf', who:'teacher', title:'Lesson plans (with syllabus)', pages:6, desc:'The syllabus, then a one-page plan for each lesson: objectives, printing, timed procedure, checks and homework.'},
+  roster:{file:'roles-and-expert-topics.pdf', who:'teacher', title:'Team roles & motion tracker', pages:1, desc:'Landscape sheet for the team of three: each student\u2019s role (PM, DPM, GW) and Round 1 part with notes, plus our side for every motion and a tick box per student for each finished card.'},
+  plan:{file:'teacher-prep-plan.pdf', who:'teacher', title:'Teacher prep plan', pages:10, desc:'How the tournament works, rule changes vs. the books, our sides, the five-class plan for a team of three, homework and the five motions at a glance.'},
+  key:{file:'topic-card-answer-key.pdf', who:'teacher', title:'Topic card answer key', pages:10, desc:'Model answers for all five topic cards, both sides.'},
+  rules:{file:'rulebook-2026.pdf', who:'teacher', title:'2026 tournament rulebook', pages:11, desc:'Official rules: format, POIs, scoring, violations and the day’s schedule.'},
+  syllabus:{file:'syllabus.pdf', who:'student', title:'Syllabus', pages:2, desc:'Dates, focus, in-class work and homework (2 tasks) for all five classes, with our sides for each motion.'},
+  argsheet:{file:'build-an-argument.pdf', who:'student', title:'Build an argument worksheet', pages:1, desc:'Day 1 pair activity: the Claim → Mechanism → Impact model, lined boxes for "Schools should start at 9:30", and a fast-finisher motion.'},
+  readings:{file:'readings-and-clash-points.pdf', who:'student', title:'Readings & clash points booklet', pages:36, desc:'Day 1 readings and Day 2 clash points from all five books.'},
+  cards:{file:'topic-cards-student.pdf', who:'student', title:'Topic cards (blank)', pages:15, desc:'Three lined pages per motion: Proposition, Opposition, and a rewrite-from-memory page.'},
+  easyEn:{file:'topics-made-easy-en.pdf', who:'student', title:'Debate topics made easy (English)', pages:8, desc:'Both sides of each motion explained simply.'},
+  easyKo:{file:'topics-made-easy-ko.pdf', who:'student', title:'쉽게 이해하는 토론 주제 (Korean)', pages:8, desc:'The same summary in Korean, with key English phrases kept.'},
+  tplEn:{file:'speech-templates-en.pdf', who:'student', title:'Speech templates (English original)', pages:11, desc:'Fill-in templates for every role. Written for 4-minute speeches, so use the 3-minute timings.'},
+  tplKo:{file:'speech-templates-ko.pdf', who:'student', title:'토론 스피치 템플릿 (Korean)', pages:10, desc:'Korean instructions, English phrases kept, with 3-minute tournament timings.'},
+  bookJan:{file:'book-jan-rent-freezes.pdf', who:'teacher', title:'Full book: Rent freezes (Jan)', pages:36, desc:'The complete topic book.'},
+  bookMar:{file:'book-mar-atlas.pdf', who:'teacher', title:'Full book: Humanoid robots (Mar)', pages:36, desc:'The complete topic book.'},
+  bookJul:{file:'book-jul-excess-profits.pdf', who:'teacher', title:'Full book: Excess profits (Jul)', pages:39, desc:'The complete topic book.'},
+  bookAug:{file:'book-aug-going-public.pdf', who:'teacher', title:'Full book: Going public (Aug)', pages:38, desc:'The complete topic book.'},
+  bookSep:{file:'book-sep-equality-equity.pdf', who:'teacher', title:'Full book: Equality vs. equity (Sep)', pages:38, desc:'The complete topic book.'}
+};
+const matLink = id => `<a class="btn small" href="materials/${MATS[id].file}" target="_blank" rel="noopener">${MATS[id].title}</a>`;
+function matRow(id){
+  const m = MATS[id];
+  return `<div class="mat"><div><h3>${m.title}</h3><p>${m.desc}</p><span class="meta">${m.who==='teacher'?'TEACHER':'STUDENT'} · ${m.pages} PAGES · PDF</span></div><a class="btn" href="materials/${m.file}" target="_blank" rel="noopener">Open to print</a></div>`;
+}
+
+/* ---------- Shared pieces ---------- */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt = sec => { sec = Math.max(0, Math.round(sec)); return Math.floor(sec/60) + ':' + String(sec%60).padStart(2,'0'); };
+const sideTag = s => s === 'gov' ? '<span class="tag gov">GOVERNMENT</span>' : '<span class="tag opp">OPPOSITION</span>';
+const teacher = t => `<div class="teacher"><b>Teacher note</b>${t}</div>`;
+
+function roundsHTML(){
+  return `<div class="rounds">
+    <div class="round"><div class="rn">Prelim 1</div><h3>Prepared</h3><ul class="clean"><li>Motion announced in advance</li><li>Sides fixed by the draw sheet</li><li><b>Notes allowed</b> (only this round)</li></ul></div>
+    <div class="round"><div class="rn">Prelim 2</div><h3>Impromptu</h3><ul class="clean"><li>Motion drawn from the list</li><li>Rock-paper-scissors: winner picks the side</li><li>20 min prep, no notes</li></ul></div>
+    <div class="round"><div class="rn">Prelim 3</div><h3>Impromptu</h3><ul class="clean"><li>Same as Round 2</li><li>No feedback after this round</li></ul></div>
+    <div class="round final"><div class="rn">Final</div><h3>Top team per league</h3><ul class="clean"><li>Motion may be new</li><li>30 min prep</li><li>3 judges decide</li></ul></div>
+  </div>`;
+}
+
+function orderHTML(currentIdx){
+  let h = '<div class="order" role="group" aria-label="Speaking order">';
+  SPEAKERS.forEach((s,i) => {
+    h += `<button class="spk ${s.side}${i===currentIdx?' current':''}" data-act="spk" data-i="${i}" aria-pressed="${i===state.spk?'true':'false'}">
+      <span class="now">NOW SPEAKING</span><span class="ab">${s.id}</span><span class="nm">${s.name}</span></button>`;
+  });
+  return h + '</div><p class="muted" style="margin:0">3:00 per speech + 0:30 grace · 1:00 for the next speaker to prepare between speeches</p>';
+}
+
+function speakerDetailHTML(){
+  const s = SPEAKERS[state.spk];
+  const total = s.parts.reduce((a,p)=>a+p[1],0);
+  return `<div class="panel spkdetail">
+    <div>${sideTag(s.side)} ${s.poi ? '<span class="tag bell">TAKES POIs</span>' : '<span class="tag bell">NO POIs</span>'}</div>
+    <h3>${s.name} (${s.id})</h3>
+    <p style="margin:0" class="big">${s.job}</p>
+    <p style="margin:0" class="say">${s.say}</p>
+    <div class="bar ${s.side}" aria-label="Speech plan">${s.parts.map(p=>`<span style="flex:${p[1]}" title="${p[0]}">${p[1]>=20?p[0]:''}</span>`).join('')}</div>
+    <div class="legend">${s.parts.map(p=>`<span>${p[0]} <b>${fmt(p[1])}</b></span>`).join('')}<span>Total <b>${fmt(total)}</b></span></div>
+  </div>`;
+}
+
+function cmiHTML(){
+  return `<div class="cmi">
+    <div class="panel"><div class="k" style="color:var(--gov)">Claim</div><div class="arel">AREL: Assertion</div><p>What you are arguing.</p><p class="say">Schools should not give homework on weekends.</p></div>
+    <div class="panel"><div class="k" style="color:var(--bell)">Mechanism</div><div class="arel">AREL: Reasoning + Evidence</div><p>Why it’s true: because… → so… → for example…</p><p class="say">Kids need real rest, so they come back focused on Monday. For example, adults come back from weekends more productive.</p></div>
+    <div class="panel"><div class="k" style="color:var(--opp)">Impact</div><div class="arel">AREL: Link</div><p>Who is affected, and why it matters.</p><p class="say">Students feel less stressed. That matters because it affects millions of students, every week.</p></div>
+  </div>`;
+}
+
+function ladderHTML(){
+  return `<div class="ladder">${LADDER.map(r=>`<button class="rung${r.aim?' aim':''}" data-act="toggle" aria-expanded="false"><span class="n">${r.n}</span><span><b>${r.name}</b> — <span class="say" style="font-size:18px">${r.say}</span><span class="ex">${r.ex}</span></span></button>`).join('')}</div>
+  <p class="muted" style="margin:0">Pattern: say what they said → say why it’s wrong (levels 4–5) → add an "Even if".</p>`;
+}
+
+function timelineHTML(){
+  const pct = s => (s/240*100).toFixed(2)+'%';
+  return `<div class="panel" id="tl"><div class="tl">
+    <div class="tl-marks">
+      <span style="left:0;transform:none">0:00</span>
+      <span class="bellm" style="left:${pct(60)}">1:00 •</span>
+      <span class="bellm" style="left:${pct(150)}">2:30 ••</span>
+      <span class="bellm" style="left:${pct(180)}">3:00 end</span>
+      <span style="left:${pct(210)}">3:30</span>
+    </div>
+    <div class="tl-track">
+      <div class="z-prot" style="flex:60">Protected</div>
+      <div class="z-poi" style="flex:90">POIs allowed</div>
+      <div class="z-prot" style="flex:30">Protected</div>
+      <div class="z-grace" style="flex:30">Grace</div>
+      <div class="z-dead" style="flex:30">Not scored</div>
+    </div>
+    <div class="tl-head" id="tlHead" style="left:0"></div></div>
+    <label class="muted" for="tlRange" style="display:block;margin-top:14px;font-size:14px">Drag to move through a speech</label>
+    <input type="range" id="tlRange" min="0" max="240" step="1" value="${state.tl}">
+    <div class="tl-status"><span class="clock" id="tlClock">0:00</span><span class="msg" id="tlMsg"></span>
+      <button class="btn small" data-act="tlplay" id="tlPlay">Play at 10× speed</button></div>
+  </div>`;
+}
+function tlUpdate(){
+  const t = state.tl, head = document.getElementById('tlHead'); if(!head) return;
+  head.style.left = (t/240*100)+'%';
+  document.getElementById('tlClock').textContent = fmt(t);
+  document.getElementById('tlRange').value = t;
+  let m, c;
+  if(t < 60){ m='Protected time: no POIs yet'; c='var(--muted)'; }
+  else if(t < 150){ m='POI window open: stand to offer a POI'; c='var(--ok)'; }
+  else if(t < 180){ m='Protected time: wrap up your speech'; c='var(--muted)'; }
+  else if(t < 210){ m='Grace time: finish your sentence (no penalty)'; c='var(--bell)'; }
+  else { m='Over 3:30: the judge stops scoring'; c='var(--no)'; }
+  const msg = document.getElementById('tlMsg'); msg.textContent = m; msg.style.color = c;
+}
+
+function poiCardsHTML(){
+  return `<div class="cards">${POI_CARDS.map(c=>`<button class="card" data-act="toggle" aria-expanded="false"><span class="q">${c.q}</span><span class="hint">Tap to reveal</span><span class="a ${c.ok?'yes':'no'}"><strong>${c.ok?'Yes.':'No.'}</strong> ${c.a.replace(/^(Yes|No)\.\s*/,'')}</span></button>`).join('')}</div>`;
+}
+
+function drawHTML(id, label, exclude){
+  const cur = state.draws[id];
+  return `<div class="panel draw">
+    <span class="eyebrow">${label}</span>
+    <div class="motion" id="draw-${id}">${cur!=null ? esc(MOTIONS[cur].motion) : 'Press the button to draw a motion.'}</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" data-act="draw" data-id="${id}" data-ex="${exclude||''}">Draw a motion</button>
+    ${cur!=null ? `<span class="muted" style="align-self:center">${MOTIONS[cur].short} (${MOTIONS[cur].month} book)</span>`:''}</div>
+  </div>`;
+}
+
+function scoresHTML(){
+  return `<div class="panel scores">
+    <div class="score-row"><b>Logic</b><div class="sb" style="width:100%">50 · AREL on the key clashes</div></div>
+    <div class="score-row"><b>Delivery</b><div class="sb" style="width:50%">25 · clear and convincing</div></div>
+    <div class="score-row"><b>Role</b><div class="sb" style="width:50%">25 · your job, POIs, rebuttal, teamwork</div></div>
+    <p style="margin:6px 0 0">Each speaker is scored out of <b>100</b>. The team total is out of <b>300</b>, and the higher total always wins.</p>
+  </div>`;
+}
+
+function homeworkHTML(items){
+  return `<div class="panel"><h3>Homework</h3><ul class="checklist">${items.map((t,i)=>`<li><label><input type="checkbox" id="hw-${state.day}-${i}"> <span>${t}</span></label></li>`).join('')}</ul></div>`;
+}
+
+const KEY = [{"name": "Rent freezes", "motion": "THBT rent freezes are a form of harmful populism.", "clash": ["Do rent freezes hurt or help the housing market?", "Who is protected, and who is left out?"], "gov": ["Stopping rent from rising sounds kind, but it causes bigger housing problems later.", ["Rent freezes distort the housing market.", "Landlords earn less, so some stop renting or fixing homes. So there are fewer homes and rent jumps later.", "Berlin’s 2019 freeze led to shortages and fast rent increases.", "Everyone looking for a home pays more and has fewer choices."], ["Rent freezes are unfair to new renters.", "Only current renters are protected. Fewer homes come onto the market, so newcomers pay more.", "In Barcelona, new renters had fewer homes and paid more.", "Young people and newlyweds lose out; inequality between generations grows."], "Governments then spend on public housing or subsidies, which can raise taxes.", "Even if a freeze helps some renters today, it shrinks the number of homes, so the vulnerable people who need a home tomorrow lose.", ["\"If landlords earn less, why would they keep renting out their homes?\"", "\"How does a freeze help a young couple looking for their first home?\""]], "opp": ["Rent freezes are a fair way to protect renters when housing costs rise too fast.", ["Rent freezes keep the economy stable.", "When rent stays the same, families have money left, so they spend more at local shops.", "Barcelona’s freeze slowed rising costs and helped the local economy.", "It protects many families and the whole local economy at once."], ["Rent freezes protect vulnerable people.", "Rent can rise faster than income. A freeze gives poor and young people time and safety.", "Vienna’s strong rent rules and public housing keep homes affordable.", "People with different incomes can live together."], "(Suggested) Families can stay in their homes, so children don’t have to change schools.", "Even if some landlords leave, a freeze stops people losing their homes now, and the government can add housing, as Vienna does.", ["\"Should families lose their homes while we wait for the market to fix itself?\"", "\"Vienna has strong rent rules and affordable housing. How does that fit your argument?\""]]}, {"name": "Humanoid robots (Atlas)", "motion": "THBT humanoid robots like Atlas must be restricted from fully replacing humans in automobile factories.", "clash": ["Does fast automation break society or move it forward?", "Efficiency, or customers who can buy?"], "gov": ["Car companies should not be allowed to replace all their workers with robots. We need limits.", ["Mass job loss hurts social stability.", "Many workers lose jobs at once and can’t retrain quickly. So inequality grows and towns decline.", "After Amazon automated its warehouses, few workers moved into technical roles.", "Thousands of families and whole towns depend on factory jobs."], ["The economy needs people who can buy things.", "People without jobs spend less, so companies sell less. Welfare costs rise; big firms push small ones out.", "Foxconn layoffs cut local business; GM layoffs weakened middle-class towns.", "Short-term efficiency can weaken the economy long term."], "Humanoid robots replace workers too fast. Training takes time, but job loss happens right away.", "Even if new jobs appear later, workers lose jobs today. Limits only slow the change so people have time to train.", ["\"Can a 50-year-old factory worker become a robot engineer in one year?\"", "\"Who will buy cars if factory workers lose their income?\""]], "opp": ["Companies should be free to use robots like Atlas. Limits would hurt progress.", ["Robots make work safer and move society forward.", "Robots take dangerous, repetitive tasks, so workers move to safer checking and managing jobs.", "Tesla workers moved to managing roles; computers created new IT jobs at Microsoft.", "Fewer workers get hurt, and technology creates better jobs."], ["Robots make companies more productive and competitive.", "Lower costs mean lower prices and more demand. Without robots, companies fall behind globally.", "BMW raised productivity and funded worker training; flexible rules helped Toss grow.", "Companies and jobs survive foreign competition; new industries appear."], "Robots aren’t the only cause of unemployment. Governments and companies share the duty to retrain workers.", "Even if some workers lose jobs, the answer is training. Restricting robots could make the company lose to foreign rivals and cost every job.", ["\"If foreign factories use robots and ours don’t, what happens to our jobs?\"", "\"Shouldn’t we fix job loss with training instead of blocking technology?\""]]}, {"name": "Excess profits", "motion": "THBT companies’ excess profits should be distributed to workers before shareholders.", "clash": ["Who deserves the reward: workers or shareholders?", "Does sharing profits grow or shrink the company?"], "gov": ["When a company makes extra profit, the workers who made it should get their share first.", ["Workers deserve a fair reward for their labor.", "Workers make the products and keep the company running every day, so they helped create the profit.", "Samsung’s 2026 union deal included performance bonuses.", "Many workers live on wages while shareholders already have money; sharing reduces the gap."], ["Sharing profits increases spending and productivity.", "Workers spend extra money locally. Rewarded workers are more motivated and loyal.", "Profit-sharing, ESOPs and efficiency wage theory.", "The economy and the company both benefit: it’s an investment."], "If profits go only to shareholders, the gap between rich asset owners and workers grows.", "Even if shareholders took a risk, they own the company and gain as it grows. Workers only have wages, so they should share in profits they made.", ["\"Without workers, could shareholders’ money make a single product?\"", "\"Why should the people who did the work be last in line?\""]], "opp": ["Shareholders should get extra profit first, because they took the financial risk.", ["Fairness means rewarding investment risk.", "Shareholders pay for factories, products and workers. If the company fails, they can lose that money.", "Without investment, Samsung could not build its chip factories.", "If risk isn’t rewarded, fewer people invest and fewer companies grow."], ["Giving workers profits first reduces investment and growth.", "Investors move money elsewhere. Big bonuses are hard to cut later, even in bad times.", "Samsung needed huge investment in chips, research and AI factories.", "Less money for research means fewer future jobs."], "It creates new inequality among workers: subcontractors and temporary workers are left out (Samsung’s non-chip workers).", "Even if bonuses boost spending for a while, a company that stops investing loses to competitors and cuts jobs later.", ["\"If the company loses money next year, will workers give back their bonuses?\"", "\"What about subcontractors who don’t get these bonuses?\""]]}, {"name": "Going public", "motion": "THBT companies should become public companies when they want to grow.", "clash": ["Is going public the best way to fund growth?", "Does stock market pressure help or hurt decisions?"], "gov": ["A company that wants to grow big should sell its shares on the stock market.", ["Going public gives companies more money.", "Many people buy shares, so the company raises a lot, and it doesn’t have to be repaid with interest.", "Amazon went public in 1997 and grew into a global company.", "Growth needs money for factories, technology and workers."], ["Going public makes companies more careful.", "Public companies must share information, and a board checks big decisions.", "Meta went public in 2012, then bought WhatsApp and invested in AI.", "It protects investors and workers from careless decisions."], "Private money may not be enough: private investors don’t fund every company.", "Even if private companies can be bolder, most can’t raise enough private money, and public checks stop bold from becoming reckless.", ["\"How many companies are as famous as SpaceX, so private investors will fund them?\"", "\"Who stops a private founder from making a careless decision?\""]], "opp": ["Companies can grow just as well, or better, by staying private.", ["Companies can grow without going public.", "They can use private investors or banks, so the founder keeps more control.", "SpaceX did much of its growth while private.", "Founders can follow their long-term vision."], ["Private companies make faster, bolder decisions.", "No stock-market checks every three months, so they can take long-term risks.", "SpaceX kept going after rocket failures and built reusable rockets and Starlink.", "Big ideas often fail at first and need patience."], "Money from shares is not free: costs, rules and stock-price worries.", "Even if going public brings more money, the founder loses control and chases short-term stock prices, which kills bold projects.", ["\"If the stock price drops after one failed project, will managers dare to try again?\"", "\"Why does the founder have to give up control just to grow?\""]]}, {"name": "Equality vs. equity", "motion": "THBT treating everyone the same cannot achieve true equality.", "clash": ["Do the same rules hide unequal starting points?", "Is different treatment fair, or new unfairness?"], "gov": ["Giving everyone exactly the same treatment isn’t truly fair, because people start from different places.", ["Treating everyone the same keeps existing inequality.", "Rich students get private education and better information, so results stay unequal.", "Seoul students had about 2.6× the SNU admission rate; ~92% of the gap was linked to family money.", "Social gaps continue from one generation to the next."], ["Equity protects dignity and real freedom of choice.", "People have different needs. Without support, some have rights on paper but no real chance.", "Visually impaired students get 1.7× CSAT time and Braille or voice devices.", "People facing barriers can take part fully and independently."], "Same support for all wastes resources and fails people with greater needs. Improve the rules; don’t give up equity.", "Even if some feel left out, ignoring unequal starting points is a bigger unfairness, and good policies still reward effort.", ["\"Is it fair to give a blind student the same test paper and time as everyone else?\"", "\"If a student never had private tutoring, did they have an equal chance?\""]], "opp": ["The same rules for everyone are fairest. Special treatment creates new unfairness.", ["It is hard to set clear rules for who needs help.", "Lives depend on many things, but systems use simple categories, so some people are left out.", "Korea’s Basic Pension Act excludes some low-income retired officials.", "Equity can create welfare blind spots."], ["Equity can cause reverse discrimination.", "People should be judged by effort. Group-based help can cost someone a chance because of their group.", "In 2023 the US Supreme Court ruled against race-conscious admissions at Harvard and UNC.", "Hard-working individuals feel unfairly treated."], "Equal basic rights already protect dignity. Labeling people as disadvantaged can create stigma.", "Even if people start differently, group-based help reaches the wrong people. Fair rules that judge individuals are better.", ["\"How does the government decide who is disadvantaged enough?\"", "\"Is it fair if a hard-working student loses a place because of their group?\""]]}];
+/* ---------- Our team's sides ---------- */
+const OURS = {rent:'opp', atlas:'opp', profits:'opp', public:'gov', equality:'opp'};
+const theirs = id => OURS[id]==='gov' ? 'opp' : 'gov';
+const mi = id => MOTIONS.findIndex(m=>m.id===id);
+/* REB: every argument the other team is likely to make, for the 30-second answer drill */
+const REB = MOTIONS.flatMap((m,i)=>[1,2].map(n=>({m:i, side:theirs(m.id), t:KEY[i][theirs(m.id)][n][0]+' '+KEY[i][theirs(m.id)][n][1]})));
+
+function sidesHTML(){
+  return `<div class="panel tablewrap"><table><thead><tr><th>Round</th><th>Motion</th><th>Our side</th></tr></thead><tbody>
+    <tr><td class="num">Round 1</td><td>${esc(MOTIONS[mi('public')].motion)}</td><td>${sideTag('gov')} <span class="muted">notes allowed</span></td></tr>
+    ${MOTIONS.filter(m=>m.id!=='public').map(m=>`<tr><td class="num">Round 2 or 3</td><td>${esc(m.motion)}</td><td>${sideTag('opp')}</td></tr>`).join('')}
+    <tr><td class="num">Final</td><td class="muted">Unknown: could be a new motion</td><td class="muted">Decided on the day</td></tr>
+  </tbody></table></div>`;
+}
+
+function argBox(a, full){
+  return `<li><b>${esc(a[0])}</b>${full?`<br>${esc(a[1])}<br><span class="muted">e.g. ${esc(a[2])}</span>`:` <span class="muted">e.g. ${esc(a[2])}</span>`}</li>`;
+}
+/* One motion: what the other team will say (short), what we say (full), Even if, POIs */
+function studyHTML(id){
+  const i = mi(id), k = KEY[i], us = OURS[id], them = theirs(id);
+  return `<div class="panel"><span class="eyebrow">${MOTIONS[i].month} book · key words: ${MOTIONS[i].words}</span><h3 style="margin:4px 0 0">${esc(MOTIONS[i].motion)}</h3></div>
+  <div class="grid2">
+    <div class="panel"><div>${sideTag(them)}</div><h3>They will say</h3><ol class="clean">${argBox(k[them][1])}${argBox(k[them][2])}</ol></div>
+    <div class="panel"><div>${sideTag(us)}</div><h3>We say</h3><p class="say" style="margin:0 0 6px">${esc(k[us][0])}</p><ol class="clean">${argBox(k[us][1],true)}${argBox(k[us][2],true)}</ol></div>
+  </div>
+  <div class="grid2">
+    <div class="panel"><h3>Our "Even if"</h3><p class="say" style="margin:0">${esc(k[us][4])}</p></div>
+    <div class="panel"><h3>Our POIs</h3><ul class="clean">${k[us][5].map(p=>`<li>${esc(p)}</li>`).join('')}</ul></div>
+  </div>
+  <div class="panel"><h3>The 2 clash questions</h3><ul class="clean">${k.clash.map(c=>`<li>${esc(c)}</li>`).join('')}</ul></div>`;
+}
+function routineHTML(){
+  return `<div class="panel"><h3>Same routine for each motion (15 minutes)</h3><div class="phases">
+    <div class="phase"><span class="pt">0–3</span><span><b>Words:</b> read the motion and key words aloud. Teacher checks meaning (Korean is fine).</span></div>
+    <div class="phase"><span class="pt">3–7</span><span><b>They will say:</b> read the other side’s 2 arguments together.</span></div>
+    <div class="phase"><span class="pt">7–12</span><span><b>We say:</b> each student says one of our arguments as Claim → because → example.</span></div>
+    <div class="phase"><span class="pt">12–15</span><span><b>Even if:</b> teacher reads one of their arguments; one student answers with the frame.</span></div>
+  </div></div>`;
+}
+const answerFrame = `<div class="frame"><div>"They said…"</div><div>"But…" (why it’s wrong)</div><div>"Even if they’re right, we still win because…"</div></div>`;
+
+/* ---------- Days and steps ---------- */
+const DAYS = [
+ {date:'Thu Nov 5', mats:{student:['syllabus','argsheet','cards','easyEn','easyKo'], teacher:['lessons','roster','key','bookAug']}, title:'Our team and the Round 1 motion', goal:'By the end of class you know your role, can build an argument with Claim → Mechanism → Impact, and understand the Going Public motion.',
+  steps:[
+   {t:'How the tournament works', from:0, to:10, html:()=>`
+     <p class="lead">There are three preliminary rounds and a final. We already know our Round 1 motion and side. Only Round 1 lets you bring notes.</p>
+     ${sidesHTML()}
+     <h3 style="margin-top:6px">Six speeches, three per team</h3>
+     ${orderHTML(-1)}
+     ${speakerDetailHTML()}
+     ${teacher('Click PM, DPM and GW to show each job. Give each student one role for every class: PM (1st), DPM (2nd) or GW (Whip). In Opposition rounds the same student is LO, DLO or OW. Record it on the team roles sheet.')}`},
+   {t:'Build an argument', from:10, to:20, html:()=>`
+     <p class="lead">Every argument has three parts. Judges score these parts under <b>Logic</b>, which is half of your score.</p>
+     ${cmiHTML()}
+     <div class="panel"><h3>Together (one worksheet each)</h3><p class="big" style="margin:0">Build one argument for: <span class="say">"Schools should start at 9:30."</span></p><p style="margin:8px 0 0"><a class="btn small" href="materials/build-an-argument.pdf" target="_blank" rel="noopener" style="text-decoration:none;color:var(--ink)">Open the worksheet</a></p><p class="muted" style="margin:6px 0 0">Student 1 writes the Claim, Student 2 the Mechanism, Student 3 the Impact. Then swap and check.</p></div>
+     ${teacher('Do it as one group of three. Ask: "Which part was missing?" Usually it’s the Impact. Skip the fast-finisher motion if time is short.')}`},
+   {t:'Read Going Public together', from:20, to:40, html:()=>`
+     <p class="lead">Most of you have never studied this topic, so we read it together first. Underline any word you don’t know.</p>
+     <div class="panel"><h3>Key words</h3><ul class="clean"><li><b>Public company:</b> anyone can buy its shares on the stock market.</li><li><b>Private company:</b> owned by founders or a few investors.</li><li><b>Share:</b> a small piece of a company.</li><li><b>IPO:</b> the first time a company sells shares to the public.</li><li><b>Investor:</b> a person who puts money in to get more back.</li></ul></div>
+     ${studyHTML('public')}
+     ${teacher('Read the Aug book’s Day 1 Background aloud, or let students read the Korean "Topics made easy" page first. Stop after each paragraph and ask one student to say it in their own words.')}`},
+   {t:'Our case in one sentence', from:40, to:50, html:()=>`
+     <p class="lead">Each of you says our side in <b>one sentence</b>, then one argument as Claim → because → example.</p>
+     <div class="panel"><h3>Sentence frames</h3><div class="frame"><div>"We believe companies should go public because…"</div><div>"Our first argument is… This is because… For example,…"</div><div>"This matters because…"</div></div></div>
+     ${teacher('Go round twice. Accept short, simple sentences. The goal today is familiarity, not a speech.')}`},
+   {t:'Wrap-up & homework', from:50, to:55, html:()=>`
+     <p class="lead">Next class we split our Round 1 case between the three of you.</p>
+     ${homeworkHTML(['Read the <b>Going Public</b> page in Debate Topics Made Easy (English or Korean).','Fill the <b>Government</b> page of the Going Public topic card. Leave the other pages.'])}`}
+  ]},
+ {date:'Tue Nov 10', mats:{student:['cards','tplEn','tplKo','easyEn','easyKo'], teacher:['lessons','key','bookAug']}, title:'Our Round 1 case: Going Public', goal:'By the end of class each of you has a plan for your Round 1 speech and can answer Opposition’s 2 main arguments.',
+  steps:[
+   {t:'Card check', from:0, to:7, html:()=>`
+     <p class="lead">Read your Government card to the group. Add anything a teammate has that you don’t.</p>
+     ${studyHTML('public')}
+     ${teacher('Compare with the answer key. Praise examples; fix any argument with no "because".')}`},
+   {t:'Split the case', from:7, to:20, html:()=>`
+     <p class="lead">Each speaker has a different job in our Round 1 case.</p>
+     <div class="rounds">
+       <div class="round"><div class="rn">PM</div><h3>Opens the case</h3><ul class="clean"><li>Says what the motion means</li><li>Argument 1: more money for growth</li><li>Argument 2: public checks make companies careful</li></ul></div>
+       <div class="round"><div class="rn">DPM</div><h3>Defends and adds</h3><ul class="clean"><li>Answers the LO</li><li>Argument 3: private money is not enough for most companies</li></ul></div>
+       <div class="round"><div class="rn">GW</div><h3>Sums up</h3><ul class="clean"><li>Answers the last speaker</li><li>Clash 1: best way to fund growth?</li><li>Clash 2: does market pressure help?</li><li>No new arguments</li></ul></div>
+     </div>
+     ${speakerDetailHTML()}
+     ${teacher('Click PM, DPM and GW above to show each speech plan with timings. Students write their own part’s heading on their outline.')}`},
+   {t:'Answer Opposition', from:20, to:32, html:()=>`
+     <p class="lead">Opposition will say private companies can grow without the stock market, and are bolder. We answer with three steps.</p>
+     ${answerFrame}
+     <div class="grid2">
+       <div class="panel">${sideTag('opp')}<p class="big" style="margin:8px 0 0">${esc(KEY[mi('public')].opp[1][0])}</p><p class="muted" style="margin:4px 0 0">e.g. ${esc(KEY[mi('public')].opp[1][2])}</p></div>
+       <div class="panel">${sideTag('opp')}<p class="big" style="margin:8px 0 0">${esc(KEY[mi('public')].opp[2][0])}</p><p class="muted" style="margin:4px 0 0">e.g. ${esc(KEY[mi('public')].opp[2][2])}</p></div>
+     </div>
+     <div class="panel"><h3>Our "Even if"</h3><p class="say" style="margin:0">${esc(KEY[mi('public')].gov[4])}</p></div>
+     ${teacher('Each student answers one argument out loud with the frame. Hint for SpaceX: "How many companies are as famous as SpaceX?"')}`},
+   {t:'Points of Information', from:32, to:44, html:()=>`
+     <p class="lead">A POI is a short question to the other team’s speaker. Stand up to offer it.</p>
+     ${timelineHTML()}
+     <h3>Can you offer it?</h3>
+     ${poiCardsHTML()}
+     <div class="panel"><h3>Drill</h3><p style="margin:0">The teacher speaks as Opposition for 90 seconds. Students stand to offer our POIs after 1:00. Then swap: each student gives 60 seconds and the teacher offers one POI. Answer in one sentence, then say "Back to my point…"</p></div>
+     ${teacher('Play the timeline once so students hear the bells. Do 3 or 4 cards, not all 7.')}`},
+   {t:'Plan your speech', from:44, to:52, html:()=>`
+     <p class="lead">Use the speech template for your role. Write <b>bullet points</b>, not full sentences.</p>
+     <div class="panel"><h3>Your outline</h3><ul class="clean"><li><b>PM:</b> definition, then Arguments 1 and 2 with one example each</li><li><b>DPM:</b> one answer to the LO, then Argument 3</li><li><b>GW:</b> Clash 1 and Clash 2, with "So we win this clash"</li></ul></div>
+     ${teacher('Use the Korean templates if needed. The templates are written for 4 minutes, so cut to the 3-minute timings.')}`},
+   {t:'Wrap-up & homework', from:52, to:55, html:()=>`
+     <p class="lead">Next class we start our Opposition motions.</p>
+     ${homeworkHTML(['Finish your Round 1 outline (bullet points only).','Read <b>Rent freezes</b> and <b>Humanoid robots</b> in Debate Topics Made Easy.'])}`}
+  ]},
+ {date:'Thu Nov 12', mats:{student:['cards','easyEn','easyKo'], teacher:['lessons','key','bookJan','bookMar']}, title:'Opposition: Rent freezes and Humanoid robots', goal:'For two motions, know what Government will say and give two Opposition arguments and an "Even if".',
+  steps:[
+   {t:'Round 1 warm-up', from:0, to:6, html:()=>`
+     <p class="lead">Read the first lines of your Round 1 outline aloud. One minute each.</p>
+     ${teacher('Listen for the definition (PM) and a clear signpost: "Our first argument is…"')}`},
+   {t:'How to answer an argument', from:6, to:14, html:()=>`
+     <p class="lead">You don’t need all five ways. Use this frame every time.</p>
+     ${answerFrame}
+     <div class="panel drill"><span class="eyebrow">30-second drill</span>
+       <div>${sideTag(REB[state.rebI].side)}</div>
+       <div class="arg">${esc(REB[state.rebI].t)}</div>
+       <div class="muted">${MOTIONS[REB[state.rebI].m].short}</div>
+       <div><button class="btn primary" data-act="nextreb">Next argument</button></div></div>
+     ${teacher('Do two or three only. Give 30 seconds of thinking time before each answer.')}`},
+   {t:'Rent freezes (Opposition)', from:14, to:30, html:()=>`
+     ${routineHTML()}
+     ${studyHTML('rent')}
+     ${teacher('Word check: populism (a policy that sounds popular but may not work), landlord, tenant. Berlin and Barcelona are Government’s examples; Vienna is ours.')}`},
+   {t:'Humanoid robots (Opposition)', from:30, to:46, html:()=>`
+     ${routineHTML()}
+     ${studyHTML('atlas')}
+     ${teacher('Word check: humanoid, be restricted, automation. Remind students we are <b>against</b> the restriction.')}`},
+   {t:'One argument each', from:46, to:52, html:()=>`
+     <p class="lead">Pick one of today’s motions. Give <b>one</b> Opposition argument in 60 seconds: Claim → because → example → why it matters.</p>
+     ${teacher('No notes if they are ready; cards are fine if not.')}`},
+   {t:'Wrap-up & homework', from:52, to:55, html:()=>`
+     ${homeworkHTML(['Fill the <b>Opposition</b> page of the Rent freezes and Humanoid robots topic cards.','Read <b>Excess profits</b> and <b>Equality vs. equity</b> in Debate Topics Made Easy.'])}`}
+  ]},
+ {date:'Tue Nov 17', mats:{student:['cards','easyEn','easyKo'], teacher:['lessons','key','bookJul','bookSep']}, title:'Opposition: Excess profits and Equality, plus the Whip', goal:'For two more motions, know what Government will say and give two Opposition arguments. The Whip can sum up one clash.',
+  steps:[
+   {t:'Card check', from:0, to:6, html:()=>`
+     <p class="lead">Read your Opposition cards for Rent freezes and Humanoid robots to the group. One argument each.</p>
+     ${drawHTML('d4','Quick check','only:rent,atlas')}
+     ${teacher('Draw a motion; the student gives one Opposition argument and one "Even if".')}`},
+   {t:'Excess profits (Opposition)', from:6, to:21, html:()=>`
+     ${routineHTML()}
+     ${studyHTML('profits')}
+     ${teacher('Word check: excess profits, distribute, shareholder. We argue shareholders should <b>not</b> always come second.')}`},
+   {t:'Equality vs. equity (Opposition)', from:21, to:36, html:()=>`
+     ${routineHTML()}
+     ${studyHTML('equality')}
+     ${teacher('Word check: equality (same treatment) vs equity (different treatment to reach fair results). We argue treating everyone the same <b>can</b> achieve equality.')}`},
+   {t:'The Whip speech', from:36, to:50, html:()=>`
+     <p class="lead">The Whip adds no new arguments. Their job is to show the judge why our team won the two biggest clashes.</p>
+     <div class="panel"><h3>One clash in 60 seconds</h3><div class="frame"><div>"The first clash was…"</div><div>"They said…"</div><div>"But our team already showed…"</div><div>"So we win this clash."</div></div></div>
+     <div class="panel"><h3>Two weighing tools to start with</h3><div class="tablewrap"><table><tbody>${WEIGH.filter(w=>w[0]==='Even if'||w[0]==='Bigger').map(w=>`<tr><td style="white-space:nowrap"><b>${w[0]}</b></td><td class="say" style="font-size:17px">${w[1]}</td></tr>`).join('')}</tbody></table></div></div>
+     ${teacher('GW practises Clash 1 of Going Public, then one Opposition motion. PM and DPM write one POI for each of today’s motions while the GW prepares, then listen and give one tip.')}`},
+   {t:'Wrap-up & homework', from:50, to:55, html:()=>`
+     <p class="lead">Next class: a Round 1 run-through. Bring your outline.</p>
+     ${homeworkHTML(['Fill the <b>Opposition</b> page of the Excess profits and Equality vs. equity topic cards.','Say your Round 1 speech aloud <b>twice</b> with your outline. Aim for about 2:45.'])}`}
+  ]},
+ {date:'Thu Nov 19', mats:{student:['syllabus','cards'], teacher:['lessons','rules','bookAug']}, title:'Round 1 run-through and final prep', goal:'Give our Round 1 speeches with notes, review the four Opposition motions, and know how to plan for a surprise final motion.',
+  steps:[
+   {t:'Round 1 run-through', from:0, to:25, html:()=>`
+     <p class="lead">Our three speeches, timed, with notes. The teacher gives the Opposition speeches from the Aug book’s model speeches.</p>
+     ${orderHTML(state.cur)}
+     <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" data-act="prevspk">← Previous speaker</button><button class="btn primary" data-act="nextspk">Next speaker →</button>
+     <a class="btn" href="https://db8timer.online" target="_blank" rel="noopener" style="text-decoration:none">Open debate timer</a></div>
+     ${speakerDetailHTML()}
+     ${teacher('Read the LO, DLO and OW model speeches from the Aug book’s Day 3 pages (shorten to about 2 minutes). Offer one POI to the PM and DPM. Give each student one tip at the end.')}`},
+   {t:'Opposition review', from:25, to:37, html:()=>`
+     <p class="lead">Draw an Opposition motion. Give two arguments and one "Even if" in 60 seconds.</p>
+     ${drawHTML('d5','Opposition motion','opp')}
+     ${sidesHTML()}
+     ${teacher('Each student does at least one draw. Cards allowed for the first try, then without.')}`},
+   {t:'Surprise final motion', from:37, to:48, html:()=>`
+     <p class="lead">We don’t know the final motion. Practise the first steps of planning, as a team.</p>
+     <div class="panel draw"><span class="eyebrow">Surprise motion</span><div class="motion" id="draw-unseen">${state.unseen!=null?esc(UNSEEN[state.unseen]):'Press the button to draw a surprise motion.'}</div><button class="btn primary" data-act="unseen">Draw a surprise motion</button></div>
+     <div class="grid2"><div class="panel"><h3>Ask these four questions</h3><ul class="clean"><li>Who wins?</li><li>Who loses?</li><li>What changes in the short term?</li><li>What changes in the long term?</li></ul></div>
+     <div class="panel"><h3>Then decide</h3><ul class="clean"><li>One argument for each side</li><li>Who says what: PM, DPM, GW</li></ul></div></div>
+     ${teacher('Plan only; no speeches. At the tournament they get 30 minutes, so remind them there is time.')}`},
+   {t:'Tournament day', from:48, to:55, html:()=>`
+     <p class="lead">Arrive by <b>10:30</b>. Here’s the day.</p>
+     <div class="panel tablewrap"><table><thead><tr><th>Event</th><th>Elementary</th><th>Middle school</th></tr></thead><tbody>
+       <tr><td>Roll call, opening, orientation</td><td class="num">10:30–10:45</td><td class="num">11:00–11:15</td></tr>
+       <tr><td>Round 1 + feedback</td><td class="num">10:55–11:25</td><td class="num">11:25–11:55</td></tr>
+       <tr><td>Round 2 (after 20 min prep) + feedback</td><td class="num">11:55–12:25</td><td class="num">12:25–12:55</td></tr>
+       <tr><td>Lunch</td><td class="num">12:25–12:55</td><td class="num">12:55–13:25</td></tr>
+       <tr><td>Round 3 (no feedback)</td><td class="num">13:15–13:45</td><td class="num">13:45–14:15</td></tr>
+       <tr><td>Finalists announced</td><td class="num">13:55–14:05</td><td class="num">14:25–14:35</td></tr>
+       <tr><td>Final (after 30 min prep)</td><td class="num">14:35–15:05</td><td class="num">15:05–15:35</td></tr>
+       <tr><td>Awards</td><td class="num">15:05–15:35</td><td class="num">15:35–16:05</td></tr></tbody></table></div>
+     <div class="grid2">
+       <div class="panel"><h3>Bring</h3><ul class="clean"><li>Pens</li><li>A lunch box</li><li>A tumbler</li><li>A paper dictionary (optional)</li><li>Round 1 notes</li></ul></div>
+       <div class="panel"><h3>Don’t</h3><ul class="clean"><li>Keep your phone on: hand it in before each round</li><li>Bring notes into Rounds 2, 3 or the final</li><li>Use an electronic dictionary</li></ul><p class="muted" style="margin:8px 0 0">A prohibited item found in a round means the team is out of the tournament.</p></div>
+     </div>
+     ${homeworkHTML(['Read your Round 1 outline and your four Opposition cards once.','Get a good night’s sleep before tournament day.'])}`}
+  ]}
+];
+
+
+/* ---------- State ---------- */
+const state = {mats:false, day:0, step:0, spk:0, cur:0, tl:0, draws:{}, unseen:null, reb:{m:0,a:0}, rebI:0};
+state.rebI = REB.findIndex(r=>MOTIONS[r.m].id!=='public');
+let timer = {left:0, total:0, running:false, id:null, done:false};
+let tlPlay = null;
+
+/* ---------- Audio ---------- */
+let actx = null;
+function ding(times=1){
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    for(let i=0;i<times;i++){
+      const t0 = actx.currentTime + i*0.35, o = actx.createOscillator(), g = actx.createGain();
+      o.type='sine'; o.frequency.setValueAtTime(1320,t0);
+      g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(0.4,t0+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t0+1.1);
+      o.connect(g).connect(actx.destination); o.start(t0); o.stop(t0+1.2);
+    }
+  }catch(e){}
+}
+
+/* ---------- Render ---------- */
+const $ = id => document.getElementById(id);
+function renderDays(){
+  $('days').innerHTML = DAYS.map((d,i)=>`<button class="day-tab" data-act="day" data-i="${i}" aria-current="${!state.mats && i===state.day}"><small>Day ${i+1} · ${d.date}</small>${d.title}</button>`).join('') +
+    `<button class="day-tab mats-tab" data-act="mats" aria-current="${state.mats}"><small>Print</small>Materials</button>`;
+}
+function renderRail(){
+  const d = DAYS[state.day];
+  $('rail').innerHTML = `<div class="daytitle">${d.title}</div><div class="goal">${d.goal}</div>` +
+    d.steps.map((s,i)=>`<button class="step-link" data-act="step" data-i="${i}" aria-current="${i===state.step}"><span class="mins">${s.from}–${s.to}</span><span>${s.t}</span></button>`).join('');
+}
+function renderStage(){
+  const d = DAYS[state.day], s = d.steps[state.step], n = d.steps.length;
+  const mins = s.to - s.from;
+  $('stage').innerHTML = `
+    <div class="stage-head">
+      <div><div class="eyebrow">Day ${state.day+1} · ${d.date} · ${s.from}–${s.to} min</div><h2>${s.t}</h2></div>
+      <div class="timer" id="timer"><span class="clock" id="tclock">${fmt(mins*60)}</span>
+        <button class="btn small" data-act="tstart" id="tstart">Start</button><button class="btn small" data-act="treset">Reset</button></div>
+    </div>
+    ${state.step===0 ? todayHTML(d) : ''}
+    ${s.html()}
+    <div class="nav">
+      <button class="btn" data-act="prev" ${state.day===0&&state.step===0?'disabled':''}>← Back</button>
+      <span class="muted" style="align-self:center">Step ${state.step+1} of ${n}</span>
+      <button class="btn primary" data-act="next" ${state.day===DAYS.length-1&&state.step===n-1?'disabled':''}>${state.step===n-1?'Next day →':'Next →'}</button>
+    </div>`;
+  resetTimer(mins*60);
+  if($('tlRange')){ $('tlRange').addEventListener('input', e=>{ stopTl(); state.tl=+e.target.value; tlUpdate(); }); tlUpdate(); }
+  updatePhases();
+}
+function todayHTML(d){
+  return `<div class="panel today"><span class="lbl">Print for today</span>${d.mats.student.map(matLink).join('')}<span class="lbl" style="margin-left:8px">Teacher</span>${d.mats.teacher.map(matLink).join('')}</div>`;
+}
+function renderMaterials(){
+  const t = Object.keys(MATS).filter(k=>MATS[k].who==='teacher'), st = Object.keys(MATS).filter(k=>MATS[k].who==='student');
+  $('rail').innerHTML = `<div class="daytitle">Materials</div><div class="goal">Every handout and reference for the five classes. Each opens as a PDF in a new tab, ready to print.</div>
+    <button class="step-link" data-act="jump" data-to="mats-student"><span class="mins">${st.length}</span><span>For students</span></button>
+    <button class="step-link" data-act="jump" data-to="mats-teacher"><span class="mins">${t.length}</span><span>For the teacher</span></button>`;
+  $('stage').innerHTML = `<div><div class="eyebrow">Print materials</div><h2>Handouts and references</h2></div>
+    <p class="lead">Open a PDF, then print it from the new tab. Everything here is A4.</p>
+    <h3 id="mats-student" style="font-size:24px">For students</h3><div class="mats">${st.map(matRow).join('')}</div>
+    <h3 id="mats-teacher" style="font-size:24px">For the teacher</h3><div class="mats">${t.map(matRow).join('')}</div>`;
+}
+function render(){
+  if(state.mats){
+    stopTl(); stopTimer(); renderDays(); renderMaterials();
+    if(location.hash.slice(1)!=='materials'){ try{ history.replaceState(null,'','#materials'); }catch(e){ location.hash='materials'; } }
+    return;
+  }
+  renderDays(); renderRail(); renderStage();
+  const h = `day-${state.day+1}-step-${state.step+1}`;
+  if(location.hash.slice(1)!==h){ try{ history.replaceState(null,'','#'+h); }catch(e){ location.hash=h; } }
+  try{ localStorage.setItem('simsonLessonPos', JSON.stringify({d:state.day,s:state.step})); }catch(e){}
+}
+function go(day, step){
+  stopTl(); stopTimer();
+  state.mats = false; state.day = day; state.step = step; state.cur = 0; state.spk = 0; state.tl = 0;
+  render(); window.scrollTo({top:0});
+}
+
+/* ---------- Step timer ---------- */
+function resetTimer(sec){ stopTimer(); timer = {left:sec,total:sec,running:false,id:null,done:false}; drawTimer(); }
+function stopTimer(){ if(timer.id){ clearInterval(timer.id); timer.id=null; } timer.running=false; }
+function drawTimer(){
+  const c=$('tclock'); if(!c) return; c.textContent = fmt(timer.left);
+  $('timer').classList.toggle('done', timer.done);
+  const b=$('tstart'); if(b) b.textContent = timer.running ? 'Pause' : (timer.left<timer.total && !timer.done ? 'Resume' : 'Start');
+  updatePhases();
+}
+function toggleTimer(){
+  if(timer.running){ stopTimer(); drawTimer(); return; }
+  if(timer.done) return;
+  timer.running = true; let last = performance.now();
+  timer.id = setInterval(()=>{
+    const now = performance.now(); timer.left -= (now-last)/1000; last = now;
+    if(timer.left<=0){ timer.left=0; timer.done=true; stopTimer(); ding(2); }
+    drawTimer();
+  }, 250);
+  drawTimer();
+}
+function updatePhases(){
+  const s = DAYS[state.day].steps[state.step], box = $('phases');
+  if(!s.phases || !box) return;
+  const el = (timer.total - timer.left)/60, started = timer.running || timer.left < timer.total;
+  [...box.children].forEach((p,i)=>{
+    const [a,b] = s.phases[i];
+    p.classList.toggle('active', started && el>=a && el<b && !timer.done);
+    p.classList.toggle('past', started && (el>=b || timer.done));
+  });
+}
+
+/* ---------- Timeline play ---------- */
+function stopTl(){ if(tlPlay){ clearInterval(tlPlay); tlPlay=null; const b=$('tlPlay'); if(b) b.textContent='Play at 10× speed'; } }
+function playTl(){
+  if(tlPlay){ stopTl(); return; }
+  if(state.tl>=240) state.tl=0;
+  $('tlPlay').textContent='Stop';
+  tlPlay = setInterval(()=>{
+    const prev = state.tl; state.tl = Math.min(240, state.tl+1);
+    if(prev<60 && state.tl>=60) ding(1);
+    if(prev<150 && state.tl>=150) ding(2);
+    if(prev<180 && state.tl>=180) ding(3);
+    tlUpdate(); if(state.tl>=240) stopTl();
+  }, 100);
+}
+
+/* ---------- Draws ---------- */
+function drawMotion(id, ex){
+  const only = ex && ex.startsWith('only:') ? ex.slice(5).split(',') : ex==='opp' ? MOTIONS.filter(m=>m.id!=='public').map(m=>m.id) : null;
+  const avoid = !only && ex && state.draws[ex]!=null ? state.draws[ex] : -1;
+  let pool = MOTIONS.map((_,i)=>i).filter(i=>i!==avoid && (!only || only.includes(MOTIONS[i].id)));
+  if(pool.length>1) pool = pool.filter(i=>i!==state.draws[id]);
+  const pick = pool[Math.floor(Math.random()*pool.length)];
+  const el = $('draw-'+id); let k = 0;
+  el.classList.add('spin');
+  const spin = setInterval(()=>{
+    el.textContent = MOTIONS[k++ % MOTIONS.length].motion;
+    if(k>8){ clearInterval(spin); state.draws[id]=pick; renderStageKeep(); }
+  }, 90);
+}
+
+/* ---------- Events ---------- */
+document.addEventListener('click', e=>{
+  const b = e.target.closest('[data-act]'); if(!b) return;
+  const a = b.dataset.act, i = +b.dataset.i;
+  const d = DAYS[state.day];
+  if(a==='mats'){ state.mats = true; render(); window.scrollTo({top:0}); }
+  else if(a==='jump'){ document.getElementById(b.dataset.to)?.scrollIntoView({behavior:'smooth'}); }
+  else if(a==='day') go(i,0);
+  else if(a==='step') go(state.day,i);
+  else if(a==='next'){ if(state.step<d.steps.length-1) go(state.day,state.step+1); else if(state.day<DAYS.length-1) go(state.day+1,0); }
+  else if(a==='prev'){ if(state.step>0) go(state.day,state.step-1); else if(state.day>0) go(state.day-1,DAYS[state.day-1].steps.length-1); }
+  else if(a==='tstart') toggleTimer();
+  else if(a==='treset') resetTimer(timer.total);
+  else if(a==='spk'){ state.spk=i; renderStageKeep(); }
+  else if(a==='nextspk'){ state.cur=Math.min(SPEAKERS.length-1,state.cur+1); state.spk=state.cur; renderStageKeep(); }
+  else if(a==='prevspk'){ state.cur=Math.max(0,state.cur-1); state.spk=state.cur; renderStageKeep(); }
+  else if(a==='toggle'){ b.setAttribute('aria-expanded', b.getAttribute('aria-expanded')==='true'?'false':'true'); }
+  else if(a==='tlplay') playTl();
+  else if(a==='draw') drawMotion(b.dataset.id, b.dataset.ex);
+  else if(a==='unseen'){ let n; do{ n=Math.floor(Math.random()*UNSEEN.length);}while(n===state.unseen && UNSEEN.length>1); state.unseen=n; renderStageKeep(); }
+  else if(a==='nextreb'){ let n; do{ n=Math.floor(Math.random()*REB.length);}while(n===state.rebI || !['rent','atlas'].includes(MOTIONS[REB[n].m].id)); state.rebI=n; renderStageKeep(); }
+});
+/* Re-render the stage without resetting the running step timer */
+function renderStageKeep(){
+  const saved = {...timer}; const wasRunning = timer.running; stopTimer();
+  renderStage();
+  timer = {...saved, id:null, running:false}; drawTimer();
+  if(wasRunning) toggleTimer();
+}
+document.addEventListener('keydown', e=>{
+  if(state.mats || e.target.matches('input, textarea, select')) return;
+  if(e.key==='ArrowRight'){ document.querySelector('[data-act="next"]:not([disabled])')?.click(); }
+  else if(e.key==='ArrowLeft'){ document.querySelector('[data-act="prev"]:not([disabled])')?.click(); }
+});
+$('notesToggle').addEventListener('change', e=>{
+  document.body.classList.toggle('show-notes', e.target.checked);
+  try{ localStorage.setItem('simsonLessonNotes', e.target.checked?'1':'0'); }catch(err){}
+});
+
+/* ---------- Start ---------- */
+function fromHash(){
+  const m = location.hash.match(/^#day-(\d)-step-(\d+)$/);
+  if(m){ const d=+m[1]-1, s=+m[2]-1; if(DAYS[d] && DAYS[d].steps[s]) return {d,s}; }
+  return null;
+}
+(function init(){
+  if(location.hash==='#materials'){ state.mats = true; }
+  let pos = fromHash();
+  if(!pos){ try{ pos = JSON.parse(localStorage.getItem('simsonLessonPos')||'null'); }catch(e){} }
+  if(pos && DAYS[pos.d] && DAYS[pos.d].steps[pos.s]){ state.day=pos.d; state.step=pos.s; }
+  try{ if(localStorage.getItem('simsonLessonNotes')==='1'){ $('notesToggle').checked=true; document.body.classList.add('show-notes'); } }catch(e){}
+  render();
+  window.addEventListener('hashchange', ()=>{ if(location.hash==='#materials'){ if(!state.mats){ state.mats=true; render(); } return; } const p=fromHash(); if(p && (p.d!==state.day||p.s!==state.step)) go(p.d,p.s); });
+})();
+</script>
+
+</body>
+</html>
